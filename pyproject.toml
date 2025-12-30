@@ -1,0 +1,61 @@
+[project]
+name = "github-reputation-toolkit"
+version = "0.1.0"
+description = "Automated GitHub reputation building toolkit for AI/ML and Security professionals"
+authors = [{name = "Ahmed Adel Bakr Alderai", email = "ah.adel.bakr@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "requests>=2.31.0",
+    "PyGithub>=2.1.0",
+    "rich>=13.7.0",
+    "typer>=0.9.0",
+    "pandas>=2.1.0",
+    "plotly>=5.18.0",
+    "streamlit>=1.29.0",
+    "python-dotenv>=1.0.0",
+    "schedule>=1.2.0",
+    "httpx>=0.26.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+    "pre-commit>=3.6.0",
+]
+
+[project.scripts]
+issue-radar = "src.issue_radar:main"
+collector = "src.collector:main"
+dashboard = "src.dashboard:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=src --cov-report=term-missing"

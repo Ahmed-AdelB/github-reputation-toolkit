@@ -1,0 +1,73 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Data and logs
+data/
+logs/
+*.db
+*.sqlite
+*.log
+
+# Reports
+reports/
+
+# Environment
+.env
+.env.*
+
+# Secrets
+.secrets.baseline
+*.pem
+*.key
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Allow examples and templates
+!.env.example
+!reports/*.md

@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install build twine
+          pip install -e .
+
+      - name: Build package
+        run: python -m build
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to PyPI
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: twine upload dist/* --skip-existing
+
+  announce:
+    needs: release
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Announce on Discord
+        if: env.DISCORD_WEBHOOK_URL != ''
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          curl -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"🚀 New Release: $VERSION\",\"description\":\"GitHub Reputation Toolkit has been updated!\",\"color\":56831,\"url\":\"https://github.com/${{ github.repository }}/releases/tag/$VERSION\"}]}" \
+            "$DISCORD_WEBHOOK_URL"
+
+      - name: Post to Twitter/X
+        if: env.TWITTER_API_KEY != ''
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+        run: |
+          echo "Twitter announcement would go here"
